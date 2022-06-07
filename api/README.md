@@ -6,4 +6,4 @@
 
 ### Diagrama
 
-<img src="/.github/diagrama.png"/>
+<img src=".github/diagrama.png"/>
