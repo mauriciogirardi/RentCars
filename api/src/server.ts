@@ -1,9 +1,17 @@
 import express from "express";
 import swaggerUi from "swagger-ui-express";
 
+import { createConnection } from "./database";
 import { routes } from "./routes";
 import swaggerFile from "./swagger.json";
-import "./database";
+
+createConnection()
+  .then(() => {
+    console.log("Initialize database!!!");
+  })
+  .catch((err) => {
+    console.log("DATABASE", err);
+  });
 
 const app = express();
 

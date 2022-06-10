@@ -1,23 +1,24 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 
-import { Category } from "../modules/cars/models/Category";
-import { Specification } from "../modules/cars/models/Specification";
+// docker-compose exec app node --require ts-node/register ./node_modules/typeorm/cli.js migration:run -d src/database
+// yarn typeorm migration:create src/database/migrations/CreateCategories
 
 const dataSource = new DataSource({
   type: "postgres",
-  host: "database",
   port: 5432,
   username: "docker",
   password: "1234",
-  database: "rentx",
-  entities: [Category, Specification],
+  database: "database_rentx",
+  entities: [],
   migrations: ["src/database/migrations/*.ts"],
+  subscribers: [],
+  logging: false,
+  synchronize: false,
 });
 
-dataSource
-  .initialize()
-  .then(async () => {
-    console.log("Initializing the database...");
-  })
-  .catch((err) => console.log("Error database ", err));
+export function createConnection(host = "database"): Promise<DataSource> {
+  return dataSource.setOptions({ host }).initialize();
+}
+
+export default dataSource;
