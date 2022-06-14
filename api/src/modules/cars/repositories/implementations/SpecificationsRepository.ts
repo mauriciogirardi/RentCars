@@ -1,41 +1,36 @@
+import { Repository } from "typeorm";
+
+import dataSource from "../../../../database";
 import { ICreateSpecificationDTO } from "../../dtos/ICreateSpecificationDTO";
-import { Specification } from "../../models/Specification";
+import { Specification } from "../../entities/Specification";
 import { ISpecificationRepository } from "../ISpecificationsRepository";
 
 export class SpecificationsRepository implements ISpecificationRepository {
-  private specifications: Specification[];
-  private static INSTANCE: SpecificationsRepository;
+  private repository: Repository<Specification>;
 
-  private constructor() {
-    this.specifications = [];
+  constructor() {
+    this.repository = dataSource.getRepository(Specification);
   }
 
-  public static getInstance(): SpecificationsRepository {
-    if (!SpecificationsRepository.INSTANCE) {
-      SpecificationsRepository.INSTANCE = new SpecificationsRepository();
-    }
-
-    return SpecificationsRepository.INSTANCE;
-  }
-
-  public create({ description, name }: ICreateSpecificationDTO): void {
-    const specification: Specification = new Specification();
-    Object.assign(specification, {
+  public async create({
+    description,
+    name,
+  }: ICreateSpecificationDTO): Promise<void> {
+    const specification = this.repository.create({
       name,
       description,
-      create_at: new Date(),
     });
 
-    this.specifications.push(specification);
+    await this.repository.save(specification);
   }
 
-  public listAllSpecification(): Specification[] {
-    return this.specifications;
+  public async listAllSpecification(): Promise<Specification[]> {
+    const specifications = await this.repository.find();
+    return specifications;
   }
 
-  public findByName(name: string): Specification {
-    return this.specifications.find(
-      (specification) => specification.name === name
-    );
+  public async findByName(name: string): Promise<Specification> {
+    const specification = await this.repository.findOneBy({ name });
+    return specification;
   }
 }
