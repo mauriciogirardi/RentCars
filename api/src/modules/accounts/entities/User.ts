@@ -14,6 +14,9 @@ export class User {
   @Column("varchar", { length: 30 })
   name: string;
 
+  @Column("varchar", { nullable: true })
+  avatar: string;
+
   @Column("varchar", { length: 50, unique: true })
   email: string;
 
