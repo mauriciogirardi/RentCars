@@ -7,8 +7,8 @@ import { Specification } from "../../../modules/cars/infra/typeorm/entities/Spec
 
 // docker-compose exec app node --require ts-node/register ./node_modules/typeorm/cli.js migration:run -d src/database
 
-// CREATE => yarn typeorm migration:create src/database/migrations/CreateCategories
-// RUN    => yarn typeorm -d ./src/database/index.ts  migration:run
+// CREATE => yarn typeorm migration:create  src/shared/infra/typeorm/migrations/<Name-migration>
+// RUN    => yarn typeorm -d src/shared/infra/typeorm/index.ts  migration:run
 // REVERT => yarn typeorm migration:revert
 
 const dataSource = new DataSource({
@@ -18,7 +18,7 @@ const dataSource = new DataSource({
   password: "1234",
   database: "database_rentx",
   entities: [Category, Specification, User],
-  migrations: ["src/database/migrations/*.ts"],
+  migrations: ["src/shared/infra/typeorm/migrations/*.ts"],
   subscribers: [],
   logging: false,
   synchronize: false,

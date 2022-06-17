@@ -7,6 +7,10 @@
 This project was developed an **API** for a car rental stores was developed
 in NodeJS with express.
 
+#### Application requirements
+
+[wiki - requirements](https://github.com/mauriciogirardi/RentCars/wiki/Requirements#cadastro-de-carro)
+
 #### Diagram
 
 <img src=".github/diagrama.png"/>
