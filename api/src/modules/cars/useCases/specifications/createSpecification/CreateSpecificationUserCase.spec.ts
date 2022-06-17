@@ -1,4 +1,4 @@
-import { AppError } from "../../../../../errors/AppError";
+import { AppError } from "../../../../../shared/errors/AppError";
 import { SpecificationsRepositoryMocks } from "../../../repositories/mocks/SpecificationsRepositoryMocks";
 import { CreateSpecificationUseCase } from "./CreateSpecificationUseCase";
 

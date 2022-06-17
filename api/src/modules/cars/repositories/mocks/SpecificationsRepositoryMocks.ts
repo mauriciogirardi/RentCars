@@ -1,5 +1,5 @@
 import { ICreateSpecificationDTO } from "../../dtos/ICreateSpecificationDTO";
-import { Specification } from "../../entities/Specification";
+import { Specification } from "../../infra/typeorm/entities/Specification";
 import { ISpecificationRepository } from "../ISpecificationsRepository";
 
 export class SpecificationsRepositoryMocks implements ISpecificationRepository {
