@@ -1,3 +1,5 @@
+import { Specification } from "../infra/typeorm/entities/Specification";
+
 export interface ICreateCarDTO {
   name: string;
   description: string;
@@ -9,4 +11,5 @@ export interface ICreateCarDTO {
   id?: string;
   available?: boolean;
   created_at?: Date;
+  specifications?: Specification[];
 }

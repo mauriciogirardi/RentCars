@@ -10,8 +10,11 @@ export class CreateSpecificationController {
       CreateSpecificationUseCase
     );
 
-    await createSpecificationUseCase.execute({ description, name });
+    const specifications = await createSpecificationUseCase.execute({
+      description,
+      name,
+    });
 
-    return response.status(201).send();
+    return response.status(201).json(specifications);
   }
 }
