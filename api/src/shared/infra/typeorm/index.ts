@@ -28,7 +28,7 @@ const dataSource = new DataSource({
   port: 5432,
   username: "docker",
   password: "1234",
-  database: "database_rentx",
+  database: process.env.NODE_ENV === "test" ? "rentx_test" : "database_rentx",
   entities: [Category, Specification, User, Car, CarImage, Rental],
   migrations: [
     CreateCategories1655153993770,
@@ -47,7 +47,9 @@ const dataSource = new DataSource({
 });
 
 export function createConnection(host = "database"): Promise<DataSource> {
-  return dataSource.setOptions({ host }).initialize();
+  return dataSource
+    .setOptions({ host: process.env.NODE_ENV === "test" ? "localhost" : host })
+    .initialize();
 }
 
 export default dataSource;
