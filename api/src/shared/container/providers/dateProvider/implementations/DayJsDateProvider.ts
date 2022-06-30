@@ -25,4 +25,11 @@ export class DayJsDateProvider implements IDateProvider {
   public dateNow(): Date {
     return dayJs().toDate();
   }
+
+  public compareInDays({ endDate, startDate }: ICompareDate): number {
+    const end_date_utc = this.convertToUTC(endDate);
+    const start_date_utc = this.convertToUTC(startDate);
+
+    return dayJs(end_date_utc).diff(start_date_utc, "days");
+  }
 }

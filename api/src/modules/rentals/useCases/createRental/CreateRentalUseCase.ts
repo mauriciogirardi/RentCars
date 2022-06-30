@@ -2,6 +2,7 @@ import { inject, injectable } from "tsyringe";
 
 import { IDateProvider } from "../../../../shared/container/providers/dateProvider/IDateProvider";
 import { AppError } from "../../../../shared/errors/AppError";
+import { ICarsRepository } from "../../../cars/repositories/ICarsRepository";
 import { ICreateRentalDTO } from "../../dtos/ICreateRentalDTO";
 import { Rental } from "../../infra/entities/Rental";
 import { IRentalsRepository } from "../../repositories/IRentalsRepository";
@@ -13,7 +14,10 @@ export class CreateRentalUseCase {
     private rentalsRepository: IRentalsRepository,
 
     @inject("DayJsDateProvider")
-    private dateProvider: IDateProvider
+    private dateProvider: IDateProvider,
+
+    @inject("CarsRepository")
+    private carsRepository: ICarsRepository
   ) {}
 
   public async execute({
@@ -54,6 +58,8 @@ export class CreateRentalUseCase {
       user_id,
       expected_return_date,
     });
+
+    await this.carsRepository.updateAvailable(car_id, false);
 
     return rental;
   }

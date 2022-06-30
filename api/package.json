@@ -5,7 +5,7 @@
   "main": "server.ts",
   "scripts": {
     "dev": "ts-node-dev --inspect --transpile-only --ignore-watch node_modules --respawn src/shared/infra/http/server.ts",
-    "test": "NODE_ENV=test jest  --watchAll --detectOpenHandles",
+    "test": "NODE_ENV=test jest",
     "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js",
     "migration:run": "ts-node-dev ./node_modules/typeorm/cli.js migration:run -d src/shared/infra/typeorm/",
     "migration:revert": "ts-node-dev ./node_modules/typeorm/cli.js migration:revert -d src/shared/infra/typeorm/",

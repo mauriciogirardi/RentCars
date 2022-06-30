@@ -2,11 +2,13 @@ import dayJs from "dayjs";
 
 import { DayJsDateProvider } from "../../../../shared/container/providers/dateProvider/implementations/DayJsDateProvider";
 import { AppError } from "../../../../shared/errors/AppError";
+import { CarRepositoryMocks } from "../../../cars/repositories/mocks/CarRepositoryMocks";
 import { RentalsRepositoryMocks } from "../../repositories/mocks/RentalsRepositoryMocks";
 import { CreateRentalUseCase } from "./CreateRentalUseCase";
 
 let rentalsRepositoryMocks: RentalsRepositoryMocks;
 let createRentalUseCase: CreateRentalUseCase;
+let carsRepositoryMocks: CarRepositoryMocks;
 let dateJsDateProvider: DayJsDateProvider;
 
 describe("CreateRentalUseCase", () => {
@@ -14,17 +16,30 @@ describe("CreateRentalUseCase", () => {
 
   beforeEach(() => {
     rentalsRepositoryMocks = new RentalsRepositoryMocks();
+    carsRepositoryMocks = new CarRepositoryMocks();
     dateJsDateProvider = new DayJsDateProvider();
+
     createRentalUseCase = new CreateRentalUseCase(
       rentalsRepositoryMocks,
-      dateJsDateProvider
+      dateJsDateProvider,
+      carsRepositoryMocks
     );
   });
 
-  it("should be able to create a new rental", async () => {
+  it(" should be able to create a new rental", async () => {
+    const car = await carsRepositoryMocks.create({
+      name: "Test",
+      description: "Car Test",
+      daily_rate: 100,
+      license_plate: "test",
+      fine_amount: 40,
+      category_id: "1234",
+      brand: "brand",
+    });
+
     const rental = await createRentalUseCase.execute({
-      car_id: "1235996456",
-      user_id: "987456",
+      user_id: "12345",
+      car_id: car.id,
       expected_return_date: dayAdd24Hours,
     });
 
@@ -32,45 +47,45 @@ describe("CreateRentalUseCase", () => {
     expect(rental).toHaveProperty("start_date");
   });
 
-  it("shouldn't be able to create a new rental if there is another open to the same user", () => {
-    expect(async () => {
-      await createRentalUseCase.execute({
-        car_id: "123456",
-        user_id: "987456",
-        expected_return_date: dayAdd24Hours,
-      });
+  it(" should not be able to create a new rental if there is another open to the same user ", async () => {
+    await rentalsRepositoryMocks.create({
+      car_id: "1111",
+      expected_return_date: dayAdd24Hours,
+      user_id: "12345",
+    });
 
-      await createRentalUseCase.execute({
-        car_id: "12345600",
-        user_id: "987456",
+    await expect(
+      createRentalUseCase.execute({
+        user_id: "12345",
+        car_id: "121212",
         expected_return_date: dayAdd24Hours,
-      });
-    }).rejects.toBeInstanceOf(AppError);
+      })
+    ).rejects.toEqual(new AppError("There's a rental in progress for user!"));
   });
 
-  it("shouldn't be able to create a new rental if there is another open to the same car", () => {
-    expect(async () => {
-      await createRentalUseCase.execute({
-        car_id: "123456",
-        user_id: "98745600",
-        expected_return_date: dayAdd24Hours,
-      });
+  it(" should not be able to create a new rental if there is another open to the same car ", async () => {
+    await rentalsRepositoryMocks.create({
+      car_id: "test",
+      expected_return_date: dayAdd24Hours,
+      user_id: "12345",
+    });
 
-      await createRentalUseCase.execute({
-        car_id: "123456",
-        user_id: "98745636",
+    await expect(
+      createRentalUseCase.execute({
+        user_id: "321",
+        car_id: "test",
         expected_return_date: dayAdd24Hours,
-      });
-    }).rejects.toBeInstanceOf(AppError);
+      })
+    ).rejects.toBeInstanceOf(AppError);
   });
 
-  it("shouldn't be able to create a new rental with invalid return time", () => {
-    expect(async () => {
-      await createRentalUseCase.execute({
-        car_id: "123456",
-        user_id: "98745636",
+  it(" should not be able to create a new rental with invalid return time ", async () => {
+    await expect(
+      createRentalUseCase.execute({
+        user_id: "123",
+        car_id: "test",
         expected_return_date: dayJs().toDate(),
-      });
-    }).rejects.toBeInstanceOf(AppError);
+      })
+    ).rejects.toEqual(new AppError("Invalid return time!"));
   });
 });
