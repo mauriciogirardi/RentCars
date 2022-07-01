@@ -12,6 +12,20 @@ export class RentalsRepository implements IRentalsRepository {
     this.repository = dataSource.getRepository(Rental);
   }
 
+  public async findOpenRentalByCar(car_id: string): Promise<Rental> {
+    const openByCar = await this.repository.findOne({
+      where: { car_id, end_date: null },
+    });
+    return openByCar;
+  }
+
+  public async findOpenRentalByUser(user_id: string): Promise<Rental> {
+    const openByUser = await this.repository.findOne({
+      where: { user_id, end_date: null },
+    });
+    return openByUser;
+  }
+
   public async create({
     car_id,
     user_id,
@@ -34,22 +48,16 @@ export class RentalsRepository implements IRentalsRepository {
     return rental;
   }
 
-  public async findOpenRentalByCar(car_id: string): Promise<Rental> {
-    const openByCar = await this.repository.findOne({
-      where: { car_id, end_date: null },
-    });
-    return openByCar;
-  }
-
-  public async findOpenRentalByUser(user_id: string): Promise<Rental> {
-    const openByUser = await this.repository.findOne({
-      where: { user_id, end_date: null },
-    });
-    return openByUser;
-  }
-
   public async findById(id: string): Promise<Rental> {
     const rental = await this.repository.findOneBy({ id });
     return rental;
+  }
+
+  public async findByUser(user_id: string): Promise<Rental[]> {
+    const rentalByUser = await this.repository.find({
+      where: { user_id },
+      relations: ["car"],
+    });
+    return rentalByUser;
   }
 }

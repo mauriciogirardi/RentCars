@@ -51,7 +51,7 @@ export class DevolutionRentalUseCase {
 
     total += daily * car.daily_rate;
 
-    rental.end_date = dateNow;
+    rental.end_date = this.dateProvider.dateNow();
     rental.total = total;
 
     await this.rentalsRepository.create(rental);
