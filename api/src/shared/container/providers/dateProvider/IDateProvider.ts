@@ -5,4 +5,5 @@ export interface IDateProvider {
   convertToUTC(date: Date): string;
   dateNow(): Date;
   compareInDays(dates: ICompareDate): number;
+  addDays(days: number): Date;
 }
