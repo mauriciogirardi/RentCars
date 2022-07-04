@@ -76,7 +76,7 @@ describe("CreateRentalUseCase", () => {
         car_id: "test",
         expected_return_date: dayAdd24Hours,
       })
-    ).rejects.toBeInstanceOf(AppError);
+    ).rejects.toEqual(new AppError("Car is unavailable!"));
   });
 
   it(" should not be able to create a new rental with invalid return time ", async () => {

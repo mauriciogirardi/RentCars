@@ -13,7 +13,7 @@ describe("CreateCategoryUserCase", () => {
 
   it("should be able to create a new category", async () => {
     const category = {
-      name: "Automatic",
+      name: "Automatic 01",
       description: "automatic car",
     };
     await createCategoryUseCase.execute(category);
@@ -26,13 +26,15 @@ describe("CreateCategoryUserCase", () => {
   });
 
   it("shouldn't be able to create a category with same name", async () => {
-    expect(async () => {
-      const category = {
-        name: "Automatic",
-        description: "automatic car",
-      };
-      await createCategoryUseCase.execute(category);
-      await createCategoryUseCase.execute(category);
-    }).rejects.toBeInstanceOf(AppError);
+    const category = {
+      name: "Automatic",
+      description: "automatic car",
+    };
+
+    await createCategoryUseCase.execute(category);
+
+    await expect(createCategoryUseCase.execute(category)).rejects.toEqual(
+      new AppError("Category already exists!")
+    );
   });
 });
