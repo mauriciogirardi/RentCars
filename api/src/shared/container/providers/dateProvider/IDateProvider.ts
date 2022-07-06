@@ -6,4 +6,5 @@ export interface IDateProvider {
   dateNow(): Date;
   compareInDays(dates: ICompareDate): number;
   addDays(days: number): Date;
+  addHours(hours: number): Date;
 }
