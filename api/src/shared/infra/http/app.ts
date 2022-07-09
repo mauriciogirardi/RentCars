@@ -1,3 +1,4 @@
+import dotenv from "dotenv";
 import express, { NextFunction, Request, Response } from "express";
 import "express-async-errors";
 import swaggerUi from "swagger-ui-express";
@@ -7,6 +8,8 @@ import { AppError } from "../../errors/AppError";
 import { createConnection } from "../typeorm";
 import { routes } from "./routes";
 import "../../container";
+
+dotenv.config({ path: process.env.NODE_ENV === "dev" ? ".env.dev" : ".env" });
 
 createConnection()
   .then(() => {
