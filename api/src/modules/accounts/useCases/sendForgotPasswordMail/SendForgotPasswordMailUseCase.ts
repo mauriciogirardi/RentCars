@@ -7,7 +7,7 @@ import { AppError } from "../../../../shared/errors/AppError";
 import { IUsersRepository } from "../../repositories/IUsersRepository";
 import { IUsersTokensRepository } from "../../repositories/IUsersTokensRepository";
 
-injectable();
+@injectable()
 export class SendForgotPasswordMailUseCase {
   constructor(
     @inject("UsersRepository")

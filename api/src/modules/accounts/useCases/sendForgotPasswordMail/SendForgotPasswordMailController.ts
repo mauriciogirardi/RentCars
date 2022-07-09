@@ -11,8 +11,6 @@ export class SendForgotPasswordMailController {
       SendForgotPasswordMailUseCase
     );
 
-    console.log(sendForgotPasswordMailUseCase);
-
     await sendForgotPasswordMailUseCase.execute(email);
 
     return response.send();
