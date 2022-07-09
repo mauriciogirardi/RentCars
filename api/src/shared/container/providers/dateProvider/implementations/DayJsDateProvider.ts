@@ -40,4 +40,8 @@ export class DayJsDateProvider implements IDateProvider {
   public addHours(hours: number): Date {
     return dayJs().add(hours, "hour").toDate();
   }
+
+  public compareIfBefore({ startDate, endDate }: ICompareDate): boolean {
+    return dayJs(startDate).isBefore(endDate);
+  }
 }
