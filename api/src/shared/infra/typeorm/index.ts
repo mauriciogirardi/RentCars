@@ -50,9 +50,7 @@ const dataSource = new DataSource({
 });
 
 export function createConnection(host = "database"): Promise<DataSource> {
-  return dataSource
-    .setOptions({ host: process.env.NODE_ENV === "test" ? "localhost" : host })
-    .initialize();
+  return dataSource.setOptions({ host }).initialize();
 }
 
 export default dataSource;

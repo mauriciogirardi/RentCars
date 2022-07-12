@@ -10,7 +10,7 @@ let connection: DataSource;
 
 describe("CreateCategoryController", () => {
   beforeAll(async () => {
-    connection = await createConnection();
+    connection = await createConnection("localhost");
     await connection.runMigrations();
 
     const id = uuid();
@@ -34,7 +34,7 @@ describe("CreateCategoryController", () => {
       password: "admin",
     });
 
-    const { token } = responseToken.body;
+    const { refresh_token } = responseToken.body;
 
     const response = await request(app)
       .post("/categories")
@@ -43,7 +43,7 @@ describe("CreateCategoryController", () => {
         description: "Category Supertest",
       })
       .set({
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${refresh_token}`,
       });
 
     expect(response.status).toBe(201);
@@ -55,7 +55,7 @@ describe("CreateCategoryController", () => {
       password: "admin",
     });
 
-    const { token } = responseToken.body;
+    const { refresh_token } = responseToken.body;
 
     const response = await request(app)
       .post("/categories")
@@ -64,7 +64,7 @@ describe("CreateCategoryController", () => {
         description: "Category Supertest",
       })
       .set({
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${refresh_token}`,
       });
 
     expect(response.status).toBe(400);
