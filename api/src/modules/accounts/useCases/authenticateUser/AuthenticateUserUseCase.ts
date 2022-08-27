@@ -2,7 +2,7 @@ import { compare } from "bcrypt";
 import { sign } from "jsonwebtoken";
 import { inject, injectable } from "tsyringe";
 
-import authConfig from "../../../../config/auth";
+import { authConfig } from "../../../../config";
 import { IDateProvider } from "../../../../shared/container/providers/dateProvider/IDateProvider";
 import { AppError } from "../../../../shared/errors/AppError";
 import { IUsersRepository } from "../../repositories/IUsersRepository";
@@ -43,10 +43,12 @@ export class AuthenticateUserUseCase {
       expires_in_refresh_token,
       expires_refresh_token_days,
     } = authConfig;
+
     const user = await this.userRepository.findByEmail(email);
     if (!user) throw new AppError("Email or password incorrect!");
 
     const passwordMatch = await compare(password, user.password);
+
     if (!passwordMatch) throw new AppError("Email or password incorrect!");
 
     const token = sign({}, secret_token, {

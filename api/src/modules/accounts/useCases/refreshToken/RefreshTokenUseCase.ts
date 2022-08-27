@@ -1,7 +1,7 @@
 import { sign, verify } from "jsonwebtoken";
 import { inject, injectable } from "tsyringe";
 
-import authConfig from "../../../../config/auth";
+import { authConfig } from "../../../../config";
 import { IDateProvider } from "../../../../shared/container/providers/dateProvider/IDateProvider";
 import { AppError } from "../../../../shared/errors/AppError";
 import { IUsersTokensRepository } from "../../repositories/IUsersTokensRepository";
@@ -11,8 +11,9 @@ interface IPayload {
   email: string;
 }
 
-interface IResponse {
+interface ITokenResponse {
   refresh_token: string;
+  token: string;
 }
 
 @injectable()
@@ -25,11 +26,13 @@ export class RefreshTokenUseCase {
     private dateProvider: IDateProvider
   ) {}
 
-  public async execute(token: string): Promise<IResponse> {
+  public async execute(token: string): Promise<ITokenResponse> {
     const {
       secret_refresh_token,
       expires_in_refresh_token,
       expires_refresh_token_days,
+      secret_token,
+      expires_in_token,
     } = authConfig;
 
     const { sub: user_id, email } = verify(
@@ -60,6 +63,11 @@ export class RefreshTokenUseCase {
       expires_date,
     });
 
-    return { refresh_token };
+    const newToken = sign({}, secret_token, {
+      subject: user_id,
+      expiresIn: expires_in_token,
+    });
+
+    return { refresh_token, token: newToken };
   }
 }

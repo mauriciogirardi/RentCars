@@ -23,9 +23,9 @@ export class UsersTokensRepository implements IUsersTokensRepository {
       user_id,
     });
 
-    const refreshToken = await this.repository.save(userToken);
+    await this.repository.save(userToken);
 
-    return refreshToken;
+    return userToken;
   }
 
   public async findByUserIdAndRefreshToken(
